@@ -126,7 +126,15 @@
     tags.a = tags.link;
     tags.i = tags.italic;
     var tag_re = /(<\/?\s*[a-zA-Z]+(?:\s?[^>]+)?>)/;
-    function xml_formatter(string) {
+    function xml_formatter(string, options) {
+        var settings = $.extend({}, {
+            echo: true,
+            animation: true,
+            command: true
+        }, $.terminal.xml_formatters);
+        if (!settings[options.formatter]) {
+            return string;
+        }
         return string.split(tag_re).map(function(string) {
             if (string.match(tag_re)) {
                 if (string[1] === '/') {
@@ -165,5 +173,9 @@
     xml_formatter.tags = tags;
     $.terminal.defaults.allowedAttributes.push('style');
     $.terminal.xml_formatter = xml_formatter;
-    $.terminal.new_formatter(xml_formatter);
+    $.terminal.xml_formatters = {
+        echo: true,
+        animation: true,
+        command: true
+    };
 });
